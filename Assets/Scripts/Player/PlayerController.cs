@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
 {
     CharacterController characterController;
 
-    [SerializeField] float movementSpeed = 5f;
     Vector3 direction;
     void Start()
     {
@@ -20,7 +19,7 @@ public class PlayerController : MonoBehaviour
 
         direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        characterController.Move(direction * movementSpeed * Time.deltaTime);
+        characterController.Move(direction * PlayerState.movementSpeed * Time.deltaTime);
 
         if (direction.magnitude > 0f)
         {

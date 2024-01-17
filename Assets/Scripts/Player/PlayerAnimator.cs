@@ -16,6 +16,8 @@ public class PlayerAnimator : MonoBehaviour
 
         animator.SetInteger("Attack", PlayerState.attackCounter);
 
+        animator.SetBool("isDefending", PlayerState.isDefending);
+
         if (Input.GetButtonUp("Fire1")) animator.SetTrigger("AttackTrigger");
     }
 }

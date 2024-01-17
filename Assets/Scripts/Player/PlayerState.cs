@@ -5,6 +5,10 @@ using UnityEngine;
 public class PlayerState : Singleton<PlayerState>
 {
     public static bool isWalking { get; set; }
+    public static bool isDefending { get; set; }
+
+    public static float movementSpeed { get; set; } = 4.5f;
+
     public static int attackCounter { get; set; } = 0;
     static int previousAttackCounter = attackCounter;
     static int maxAttackCounter = 4;
@@ -15,15 +19,16 @@ public class PlayerState : Singleton<PlayerState>
     {
         if (previousAttackCounter > 0 || attackCounter > 0)
         {
-            if (currentClearAttackCoroutine == null) currentClearAttackCoroutine = StartCoroutine(ClearAttackCounterCoroutine(1.5f));
+            if (currentClearAttackCoroutine == null) currentClearAttackCoroutine = StartCoroutine(ClearAttackCounterCoroutine(1));
 
             if (attackCounter > previousAttackCounter) ClearCoroutine(currentClearAttackCoroutine);
         }
 
-        if (attackCounter > maxAttackCounter)
-        {
-            attackCounter = 1;
-        }
+        if (attackCounter > maxAttackCounter) attackCounter = 1;
+
+        if (isDefending) attackCounter = 0;
+
+        movementSpeed = isDefending ? 1.75f: 4.5f;
 
         previousAttackCounter = attackCounter;
     }
@@ -35,7 +40,7 @@ public class PlayerState : Singleton<PlayerState>
         ClearAttackCounter();
     }
 
-    void ClearAttackCounter()
+    public static void ClearAttackCounter()
     {
         attackCounter = 0;
         currentClearAttackCoroutine = null;
