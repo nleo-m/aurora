@@ -22,7 +22,7 @@ public class PlayerState : Singleton<PlayerState>
 
         if (attackCounter > maxAttackCounter)
         {
-             ClearAttackCounter();
+            attackCounter = 1;
         }
 
         previousAttackCounter = attackCounter;
