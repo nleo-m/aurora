@@ -27,6 +27,11 @@ public class PlayerController : MonoBehaviour
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
 
             transform.rotation = Quaternion.Euler(0, targetAngle, 0);
+
+            PlayerState.isWalking = true; 
+        } else
+        {
+            PlayerState.isWalking = false;
         }
     }
 }
