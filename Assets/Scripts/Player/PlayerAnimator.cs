@@ -12,6 +12,10 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
-        animator.SetBool("isWalking", PlayerState.isWalking);        
+        animator.SetBool("isWalking", PlayerState.isWalking);
+
+        animator.SetInteger("Attack", PlayerState.attackCounter);
+
+        if (Input.GetButtonUp("Fire1")) animator.SetTrigger("AttackTrigger");
     }
 }
