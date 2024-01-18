@@ -1,45 +1,46 @@
+using OpenCover.Framework.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Slime : MonoBehaviour
+public abstract class EnemyAI : MonoBehaviour
 {
     public NavMeshAgent agent;
     public Transform player;
 
-    public LayerMask whatIsGround, whatIsPlayer;
+    [SerializeField] LayerMask whatIsGround, whatIsPlayer;
 
-    public Vector3 walkPoint;
-    public float walkPointRange;
-    public bool walkPointSet;
+    Vector3 walkPoint;
+    float walkPointRange;
+    bool walkPointSet;
 
-    public float attackDelay;
-    public bool alreadyAttacked;
+    [SerializeField] float attackDelay;
+    protected bool alreadyAttacked;
 
-    public float sightRange, attackRange;
-    public bool playerInSightRange, playerInAttackRange;
+    [SerializeField] float sightRange, attackRange;
+    protected bool playerInSightRange, playerInAttackRange;
 
-    void Start()
+    protected virtual void Start()
     {
         player = GameObject.Find("Luna").transform;
         agent = GetComponent<NavMeshAgent>();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
 
         if (!playerInSightRange && !playerInAttackRange) Patrol();
-        if (playerInSightRange && !playerInAttackRange) Chase();
-        if (playerInSightRange && playerInAttackRange) Attack();
+        if (playerInSightRange && !playerInAttackRange) ChasePlayer();
+        if (playerInSightRange && playerInAttackRange) AttackPlayer();
 
 
     }
 
-    void SearchWalkPoint()
+    protected void SearchWalkPoint()
     {
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
@@ -49,7 +50,7 @@ public class Slime : MonoBehaviour
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)) walkPointSet = true;
     }
 
-    void Patrol()
+    protected void Patrol()
     {
         if (!walkPointSet) SearchWalkPoint();
 
@@ -60,28 +61,33 @@ public class Slime : MonoBehaviour
         if (distanceToWalkPoint.magnitude < 1) walkPointSet = false;
     }
 
-    void Chase()
+    protected void ChasePlayer()
     {
         agent.SetDestination(player.position);
     }
 
-    void Attack()
+    protected virtual void AttackPlayer()
     {
-        agent.SetDestination(transform.position);
+        Vector3 directionToPlayer = player.position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
+        float angleDifference = Quaternion.Angle(transform.rotation, lookRotation) * Mathf.Deg2Rad;
 
-        transform.LookAt(player);
+        if (angleDifference > 0.3f) transform.LookAt(player);
 
         if (!alreadyAttacked)
         {
-            // attack code here
-
+            Attack();
             alreadyAttacked = true;
-            Invoke(nameof(ResetAttack), attackDelay);
+            StartCoroutine(ResetAttack());
         }
     }
 
-    void ResetAttack()
+    protected abstract void Attack();
+
+    protected IEnumerator ResetAttack()
     {
+        yield return new WaitForSeconds(attackDelay);
+
         alreadyAttacked = false;
     }
 
