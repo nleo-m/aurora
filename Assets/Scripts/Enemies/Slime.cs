@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Slime : EnemyAI
+public class Slime : EnemyAI, IDamageable
 {
     Animator animator;
     [SerializeField] Collider damageZone;
+    [SerializeField] int hitPoints;
     protected override void Start()
     {
         base.Start();
@@ -14,7 +15,6 @@ public class Slime : EnemyAI
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     protected override void Update()
     {
         base.Update();
@@ -23,5 +23,14 @@ public class Slime : EnemyAI
     protected override void Attack()
     {
         animator.SetTrigger("Attack");
+    }
+
+    public void TakeDamage(int damage = 0)
+    {
+        animator.SetTrigger("Hit");
+
+        hitPoints -= damage;
+
+        Debug.Log($"Slime was hit, {hitPoints} hitPoints left!");
     }
 }
