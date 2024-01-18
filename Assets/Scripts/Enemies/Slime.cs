@@ -10,6 +10,8 @@ public class Slime : EnemyAI, IDamageable
     [SerializeField] int hitPoints;
     [SerializeField] int destroyWhenDeadDelay;
 
+    bool isMoving, alreadyDead;
+
     protected override void Start()
     {
         base.Start();
@@ -20,6 +22,10 @@ public class Slime : EnemyAI, IDamageable
     protected override void Update()
     {
         if (hitPoints > 0) base.Update();
+
+        isMoving = base.agent.velocity.magnitude > 0 ? true : false;
+
+        animator.SetBool("isMoving", isMoving);
         
     }
 
@@ -36,10 +42,11 @@ public class Slime : EnemyAI, IDamageable
 
         Debug.Log($"Slime was hit, {hitPoints} hitPoints left!");
 
-        if (hitPoints <= 0)
+        if (hitPoints <= 0 && !alreadyDead)
         {
-            animator.SetTrigger("Die");
+            alreadyDead = true;
             StartCoroutine(Die());
+            animator.SetTrigger("Die");
         }
     }
 
