@@ -240,6 +240,8 @@ MonoBehaviour:
   sightRange: 10
   attackRange: 3
   damageZone: {fileID: 654358413}
+  hitPoints: 10
+  destroyWhenDeadDelay: 10
 --- !u!135 &540691760
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -259,8 +261,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0.43, z: 0}
+  m_Radius: 0.55
+  m_Center: {x: 0, y: 0.49, z: 0}
 --- !u!1 &654358411
 GameObject:
   m_ObjectHideFlags: 0
@@ -2153,7 +2155,7 @@ CharacterController:
   m_Height: 1.5
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.2
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.72, z: 0}
@@ -2259,7 +2261,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5
+      value: 5.67
       objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.z

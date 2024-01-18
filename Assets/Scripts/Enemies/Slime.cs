@@ -8,6 +8,8 @@ public class Slime : EnemyAI, IDamageable
     Animator animator;
     [SerializeField] Collider damageZone;
     [SerializeField] int hitPoints;
+    [SerializeField] int destroyWhenDeadDelay;
+
     protected override void Start()
     {
         base.Start();
@@ -17,7 +19,8 @@ public class Slime : EnemyAI, IDamageable
 
     protected override void Update()
     {
-        base.Update();
+        if (hitPoints > 0) base.Update();
+        
     }
 
     protected override void Attack()
@@ -32,5 +35,18 @@ public class Slime : EnemyAI, IDamageable
         hitPoints -= damage;
 
         Debug.Log($"Slime was hit, {hitPoints} hitPoints left!");
+
+        if (hitPoints <= 0)
+        {
+            animator.SetTrigger("Die");
+            StartCoroutine(Die());
+        }
+    }
+
+    IEnumerator Die()
+    {
+        yield return new WaitForSeconds(destroyWhenDeadDelay);
+
+        Destroy(gameObject);
     }
 }
