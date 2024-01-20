@@ -10,17 +10,22 @@ public abstract class EnemyAI : MonoBehaviour
     public NavMeshAgent agent;
     public Transform player;
 
+    Vector3 playerLastKnownPosition;
+    bool chasingPlayer;
+
     [SerializeField] LayerMask whatIsGround, whatIsPlayer;
 
     Vector3 walkPoint;
-    float walkPointRange;
     bool walkPointSet;
 
     [SerializeField] float attackDelay;
     protected bool alreadyAttacked;
 
-    [SerializeField] float sightRange, attackRange;
+    [SerializeField] float sightRange, attackRange, walkPointRange;
+    [SerializeField] float minPatrolDelay, maxPatrolDelay;
     protected bool playerInSightRange, playerInAttackRange;
+
+    Coroutine currentWalkPointCoroutine = null;
 
     protected virtual void Start()
     {
@@ -40,29 +45,44 @@ public abstract class EnemyAI : MonoBehaviour
 
     }
 
-    protected void SearchWalkPoint()
+    IEnumerator SearchWalkPoint()
     {
+        walkPointSet = true;
+
+        yield return new WaitForSeconds(Random.Range(minPatrolDelay, maxPatrolDelay));
+
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
 
         walkPoint = new Vector3(transform.position.x + randomX, 0f, transform.position.y + randomZ);
-
-        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround)) walkPointSet = true;
+        currentWalkPointCoroutine = null;
     }
+
+    void ClearWalkPoint()
+    {
+        chasingPlayer = false;
+        walkPointSet = false;
+    }
+
 
     protected void Patrol()
     {
-        if (!walkPointSet) SearchWalkPoint();
+        if (chasingPlayer) walkPoint = playerLastKnownPosition;
+
+        if (!walkPointSet) currentWalkPointCoroutine = StartCoroutine(SearchWalkPoint());
 
         if (walkPointSet) agent.SetDestination(walkPoint);
-        
+
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
-        if (distanceToWalkPoint.magnitude < 1) walkPointSet = false;
+        if (distanceToWalkPoint.magnitude < 5 && currentWalkPointCoroutine == null) ClearWalkPoint();
     }
 
     protected void ChasePlayer()
     {
+        chasingPlayer = true;
+        playerLastKnownPosition = player.position;
+
         agent.SetDestination(player.position);
     }
 
@@ -93,6 +113,8 @@ public abstract class EnemyAI : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, walkPointRange);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, sightRange);
         Gizmos.color = Color.red;

@@ -207,11 +207,11 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.65
-  m_Speed: 3.5
+  m_Speed: 1.25
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 3
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -235,13 +235,16 @@ MonoBehaviour:
   player: {fileID: 1578125446}
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 8
   attackDelay: 2.5
   sightRange: 10
   attackRange: 3
+  walkPointRange: 10
+  minPatrolDelay: 4
+  maxPatrolDelay: 12
   damageZone: {fileID: 654358413}
   hitPoints: 10
   destroyWhenDeadDelay: 10
@@ -1396,7 +1399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7019920669011962644, guid: cc91c8ba8b9a34f4d99e70d721f60b64, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -8.89
       objectReference: {fileID: 0}
     - target: {fileID: 7019920669011962644, guid: cc91c8ba8b9a34f4d99e70d721f60b64, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1842,7 +1845,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 10.420001, z: -14.678204}
+  m_LocalPosition: {x: 0, y: 10.420001, z: -23.568203}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2028,7 +2031,7 @@ Transform:
   m_GameObject: {fileID: 1494918394}
   serializedVersion: 2
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 10.420001, z: -14.678204}
+  m_LocalPosition: {x: 0, y: 10.420001, z: -23.568203}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2213,7 +2216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a4e068685be5ca43874dffc153e864d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitPoints: 2
+  hitPoints: 20
 --- !u!1001 &1639521785
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2284,7 +2287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.6
+      value: -3.4
       objectReference: {fileID: 0}
     - target: {fileID: 4047972025199878, guid: 928a1377c1cd4515b208fef3a396b8ea, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2491,7 +2494,7 @@ GameObject:
   - component: {fileID: 1995175939}
   - component: {fileID: 1995175938}
   - component: {fileID: 1995175937}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2579,7 +2582,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.008726465, z: 0, w: 0.999962}
   m_LocalPosition: {x: -1.713088, y: 3.7466116, z: -0.90954494}
-  m_LocalScale: {x: 30, y: 1, z: 30}
+  m_LocalScale: {x: 60, y: 1, z: 60}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
