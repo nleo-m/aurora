@@ -11,6 +11,8 @@ public class PlayerCombat : MonoBehaviour
 
     void Update()
     {
+        if (PlayerState.isDead) return;
+
         if (Input.GetButtonUp("Fire1")) PlayerState.attackCounter++;
 
         PlayerState.isDefending = Input.GetButton("Fire2");

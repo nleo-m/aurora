@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerState : Singleton<PlayerState>
+public class PlayerState : Singleton<PlayerState>, IDamageable
 {
     public static bool isWalking { get; set; }
     public static bool isDefending { get; set; }
+    public static bool isDead { get; set; }
 
     public static float movementSpeed { get; set; } = 4.5f;
 
@@ -15,8 +16,14 @@ public class PlayerState : Singleton<PlayerState>
 
     static Coroutine currentClearAttackCoroutine = null;
 
+    [SerializeField] int hitPoints = 30;
+
     private void Update()
     {
+        if (isDead) return;
+
+        if (hitPoints <= 0) isDead = true;
+
         if (previousAttackCounter > 0 || attackCounter > 0)
         {
             if (currentClearAttackCoroutine == null) currentClearAttackCoroutine = StartCoroutine(ClearAttackCounterCoroutine(1));
@@ -28,9 +35,10 @@ public class PlayerState : Singleton<PlayerState>
 
         if (isDefending) attackCounter = 0;
 
-        movementSpeed = isDefending ? 1.75f: 4.5f;
+        movementSpeed = isDefending ? 1.75f : 4.5f;
 
         previousAttackCounter = attackCounter;
+
     }
 
     IEnumerator ClearAttackCounterCoroutine(float secs)
@@ -50,5 +58,10 @@ public class PlayerState : Singleton<PlayerState>
     {
         StopCoroutine(coroutine);
         currentClearAttackCoroutine = null;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        hitPoints -= damage;
     }
 }
