@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (PlayerState.isDead) return;
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 

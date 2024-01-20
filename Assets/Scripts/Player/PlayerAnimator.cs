@@ -12,6 +12,8 @@ public class PlayerAnimator : MonoBehaviour
 
     void Update()
     {
+        if (PlayerState.isDead) animator.SetTrigger("Die");
+
         animator.SetBool("isWalking", PlayerState.isWalking);
 
         animator.SetInteger("Attack", PlayerState.attackCounter);
