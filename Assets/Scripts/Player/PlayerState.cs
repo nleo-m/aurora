@@ -15,14 +15,25 @@ public class PlayerState : Singleton<PlayerState>, IDamageable
     static int maxAttackCounter = 4;
 
     static Coroutine currentClearAttackCoroutine = null;
+    static Coroutine currentRestoreDefenseCoroutine = null;
 
+    [SerializeField] int maxDefensePoints;
+    [SerializeField] int defensePoints;
     [SerializeField] int hitPoints = 30;
+    [SerializeField] int restoreDefenseDelay;
+
+    private void Start()
+    {
+        defensePoints = maxDefensePoints;
+    }
 
     private void Update()
     {
         if (isDead) return;
 
         if (hitPoints <= 0) isDead = true;
+
+        if (defensePoints < maxDefensePoints && !isDefending && currentRestoreDefenseCoroutine == null) currentRestoreDefenseCoroutine = StartCoroutine(RestoreDefenseCoroutine());
 
         if (previousAttackCounter > 0 || attackCounter > 0)
         {
@@ -48,10 +59,13 @@ public class PlayerState : Singleton<PlayerState>, IDamageable
         ClearAttackCounter();
     }
 
-    public static void ClearAttackCounter()
+    IEnumerator RestoreDefenseCoroutine()
     {
-        attackCounter = 0;
-        currentClearAttackCoroutine = null;
+        yield return new WaitForSeconds(restoreDefenseDelay);
+
+        currentRestoreDefenseCoroutine = null;
+
+        defensePoints++;
     }
 
     void ClearCoroutine(Coroutine coroutine)
@@ -60,8 +74,18 @@ public class PlayerState : Singleton<PlayerState>, IDamageable
         currentClearAttackCoroutine = null;
     }
 
+    public static void ClearAttackCounter()
+    {
+        attackCounter = 0;
+        currentClearAttackCoroutine = null;
+    }
+
     public void TakeDamage(int damage)
     {
-        hitPoints -= damage;
+        if (isDefending && defensePoints > 0) defensePoints--;
+
+        if (!isDefending || defensePoints <= 0) hitPoints -= damage;
+
+        Debug.Log(hitPoints);
     }
 }
